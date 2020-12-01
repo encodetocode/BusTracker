@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'dart:core';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,7 +16,9 @@ class GoogleMapsServices {
   Set<Marker> get markers => _markers;
   final Set<Marker> _markers = {};
   final List<String> stations = [];
+  String mins;
   BitmapDescriptor _markerIcon;
+  List ways;
 
   // void _setMarkerIcon() async{
   //   _markerIcon = await BitmapDescriptor.
@@ -31,13 +34,22 @@ class GoogleMapsServices {
     } else {
       var points = await _getwaypoints(waypoints);
       String url =
-          "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&waypoints=$points&travel_mode=transit&key=$apiKey";
+          "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&waypoints=$points&travel_mode=transit&departure_time=now&key=$apiKey";
       http.Response response = await http.get(url);
       Map values = jsonDecode(response.body);
       var routes = values["routes"][0];
-      var legs = routes[0];
-      log(routes.toString());
+      // var legs = routes[0];
+      // log(values.toString());
+      ways = waypoints;
+      ways.add(LatLng(l1.latitude, l1.longitude));
       log(routes['legs'][0]['duration'].toString());
+      var timeinseconds =
+          routes['legs'][0]['duration_in_traffic']['value'].toString();
+      var timeinseconds2 = routes['legs'][0]['duration']['value'].toString();
+      var timeinsecondsint =
+          ((int.parse(timeinseconds) + int.parse(timeinseconds2)) / 60).round();
+      log(timeinsecondsint.toString());
+      mins = timeinsecondsint.toString();
       return values["routes"][0]["overview_polyline"]["points"];
     }
   }
@@ -53,10 +65,12 @@ class GoogleMapsServices {
   void createMarkers(String encondedPoly) async {
     var way = _convertToLatLng(_decodePoly(encondedPoly));
     // print(way);
-    for (int i = 0; i < way.length - 1; i++) {
+    print(way.length);
+    print(ways);
+    for (int i = 0; i < (ways.length - 1); i++) {
       _markers.add(Marker(
-        markerId: MarkerId('0'),
-        position: new LatLng(way[i].latitude, way[i].longitude),
+        markerId: MarkerId('$i'),
+        position: LatLng(ways[i].latitude, ways[i].longitude),
       ));
     }
   }

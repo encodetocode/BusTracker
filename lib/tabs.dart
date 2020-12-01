@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
+// import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_map_polyline/google_map_polyline.dart';
@@ -22,7 +23,9 @@ class GonyeliState extends State<Gonyeli> {
   GoogleMapController _controller;
   final api = 'AIzaSyAB85B9V9XjstZ9_BT_GF70Jb6AitZvseM';
   Set<Polyline> _polylines = HashSet<Polyline>();
-  // Set<Marker> _markers = HashSet<Marker>();
+  Set<Marker> _markers = HashSet<Marker>();
+  Set<Marker> markers = HashSet<Marker>();
+
   // List<LatLng> polylineLatLongs = List<LatLng>();
   GoogleMapPolyline googleMapPolyline =
       new GoogleMapPolyline(apiKey: "AIzaSyAB85B9V9XjstZ9_BT_GF70Jb6AitZvseM");
@@ -42,6 +45,7 @@ class GonyeliState extends State<Gonyeli> {
     LatLng(35.2103317, 33.3144706),
     LatLng(35.2096584, 33.3171102),
   ];
+
   List<String> stations = [
     'first',
     'second',
@@ -76,17 +80,18 @@ class GonyeliState extends State<Gonyeli> {
   //     stream: FirebaseFirestore.instance.collection("products").snapshots(),
   //     builder: ,);
   // }
-  // void _createMarkers() async {
-  //   for (int i = 0; i < (way.length - 1); i++) {
-  //     _markers.add(Marker(
-  //       markerId: MarkerId('${stations[i]}'),
-  //       position: new LatLng(way[i].latitude, way[i].longitude),
-  //       infoWindow: InfoWindow(
-  //         onTap: () => "${stations[i]}",
-  //       ),
-  //     ));
-  //   }
-  // }
+  void _createMarkers() async {
+    for (int i = 0; i < (way.length - 1); i++) {
+      markers.add(Marker(
+        markerId: MarkerId('${stations[i]}'),
+        position: new LatLng(way[i].latitude, way[i].longitude),
+        infoWindow: InfoWindow(
+          onTap: () => "${stations[i]}",
+        ),
+      ));
+    }
+  }
+
   void onMapCreated(controller) {
     // List<LatLng> polylineLatLongs = List<LatLng>();
     // polylineLatLongs.add(LatLng(35.2297683, 33.3242372));
@@ -108,6 +113,35 @@ class GonyeliState extends State<Gonyeli> {
     });
   }
 
+  // getmarkers() async {
+  //   List clients = [];
+  //   FirebaseFirestore.instance
+  //       .collection('city')
+  //       .doc('city_1')
+  //       .collection('markers')
+  //       .get()
+  //       .then((docs) {
+  //     if (docs.docs.isNotEmpty) {
+  //       print("$docs.docs");
+  //       for (int i = 0; i < docs.docs.length; ++i) {
+  //         clients.add(docs.docs[i].data);
+  //         initMarker(docs.docs[i].data);
+  //       }
+  //     }
+  //   });
+  // }
+
+  // initMarker(client) {
+  //   // _markers.then(val){
+  //   _markers.add(Marker(
+  //       position:
+  //           LatLng(client['location'].latitude, client['location'].longitude),
+  //       draggable: false,
+  //       infoWindow: InfoWindow(title: client['station_name']),
+  //       markerId: MarkerId('0')));
+  //   // };
+  // }
+
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(35.2297683, 33.3242372),
     zoom: 14.4746,
@@ -117,6 +151,7 @@ class GonyeliState extends State<Gonyeli> {
   void initState() {
     super.initState();
     _getWayPoints();
+    // getmarkers();
   }
 
   // void showPlacePicker() async {
@@ -128,6 +163,8 @@ class GonyeliState extends State<Gonyeli> {
   // }
   @override
   Widget build(BuildContext context) {
+    var oka;
+    oka = _googleMapsServices.mins;
     return Scaffold(
         body: Stack(children: [
       GoogleMap(
@@ -148,7 +185,17 @@ class GonyeliState extends State<Gonyeli> {
             });
           },
         ),
-      )
+      ),
+
+      Padding(
+          padding: EdgeInsets.all(10),
+          child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(15),
+                child: Text("$oka"),
+              )))
       // FlatButton(
       //     onPressed: () {
       //       showPlacePicker();
