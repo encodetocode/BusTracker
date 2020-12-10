@@ -42,7 +42,7 @@ class GoogleMapsServices {
       // log(values.toString());
       ways = waypoints;
       ways.add(LatLng(l1.latitude, l1.longitude));
-      log(routes['legs'][0]['duration'].toString());
+      log(routes['legs'].toString());
       var timeinseconds =
           routes['legs'][0]['duration_in_traffic']['value'].toString();
       var timeinseconds2 = routes['legs'][0]['duration']['value'].toString();
@@ -69,9 +69,14 @@ class GoogleMapsServices {
     print(ways);
     for (int i = 0; i < (ways.length - 1); i++) {
       _markers.add(Marker(
-        markerId: MarkerId('$i'),
-        position: LatLng(ways[i].latitude, ways[i].longitude),
-      ));
+          markerId: MarkerId('$i'),
+          position: LatLng(ways[i].latitude, ways[i].longitude),
+          onTap: () {
+            Align(
+                alignment: Alignment.centerLeft,
+                child: FloatingActionButton(
+                    child: Icon(Icons.person), onPressed: () {}));
+          }));
     }
   }
 

@@ -113,34 +113,37 @@ class GonyeliState extends State<Gonyeli> {
     });
   }
 
-  // getmarkers() async {
-  //   List clients = [];
-  //   FirebaseFirestore.instance
-  //       .collection('city')
-  //       .doc('city_1')
-  //       .collection('markers')
-  //       .get()
-  //       .then((docs) {
-  //     if (docs.docs.isNotEmpty) {
-  //       print("$docs.docs");
-  //       for (int i = 0; i < docs.docs.length; ++i) {
-  //         clients.add(docs.docs[i].data);
-  //         initMarker(docs.docs[i].data);
-  //       }
-  //     }
-  //   });
-  // }
+  getmarkers() async {
+    List clients = [];
+    FirebaseFirestore.instance
+        .collection('city')
+        .doc('city_1')
+        .collection('markers')
+        .get()
+        .then((docs) {
+      if (docs.docs.isNotEmpty) {
+        var num = docs.docs.length;
+        log("$num");
+        for (int i = 0; i < docs.docs.length; ++i) {
+          clients.add(docs.docs[i].data());
+          initMarker(docs.docs[i].data());
+        }
+      }
+    });
+  }
 
-  // initMarker(client) {
-  //   // _markers.then(val){
-  //   _markers.add(Marker(
-  //       position:
-  //           LatLng(client['location'].latitude, client['location'].longitude),
-  //       draggable: false,
-  //       infoWindow: InfoWindow(title: client['station_name']),
-  //       markerId: MarkerId('0')));
-  //   // };
-  // }
+  initMarker(client) {
+    // _markers.then(val){
+    print("$client");
+    var station = client['station_name'];
+    _markers.add(Marker(
+        position:
+            LatLng(client['location'].latitude, client['location'].longitude),
+        draggable: false,
+        infoWindow: InfoWindow(title: client['station_name']),
+        markerId: MarkerId('$station')));
+    // };
+  }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(35.2297683, 33.3242372),
@@ -151,7 +154,7 @@ class GonyeliState extends State<Gonyeli> {
   void initState() {
     super.initState();
     _getWayPoints();
-    // getmarkers();
+    getmarkers();
   }
 
   // void showPlacePicker() async {
@@ -171,7 +174,7 @@ class GonyeliState extends State<Gonyeli> {
         initialCameraPosition: _kGooglePlex,
         zoomControlsEnabled: false,
         onMapCreated: onMapCreated,
-        markers: _googleMapsServices.markers,
+        markers: _markers,
         polylines: _googleMapsServices.polyLines,
         // trafficEnabled: true,
       ),
@@ -182,6 +185,7 @@ class GonyeliState extends State<Gonyeli> {
           onPressed: () {
             setState(() {
               _getWayPoints();
+              getmarkers();
             });
           },
         ),

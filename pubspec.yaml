@@ -35,6 +35,10 @@ dependencies:
   google_polyline_algorithm: ^2.0.0
   cloud_firestore: ^0.14.3+1
   firebase_core: ^0.5.2+1
+  firebase_auth: "^0.18.4"
+  provider: ^4.3.2+3
+  geolocator: ^6.1.13
+
   
 dev_dependencies:
   flutter_test:
