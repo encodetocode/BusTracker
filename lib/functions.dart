@@ -1,13 +1,11 @@
-import 'dart:collection';
 import 'dart:developer';
 import 'dart:core';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-const apiKey = "AIzaSyAB85B9V9XjstZ9_BT_GF70Jb6AitZvseM";
+const apiKey = "API-Key";
 
 class GoogleMapsServices {
   final Set<Polyline> _polyLines = {};
@@ -17,12 +15,8 @@ class GoogleMapsServices {
   final Set<Marker> _markers = {};
   final List<String> stations = [];
   String mins;
-  BitmapDescriptor _markerIcon;
   List ways;
 
-  // void _setMarkerIcon() async{
-  //   _markerIcon = await BitmapDescriptor.
-  // }
   Future<String> getRouteCoordinates(LatLng l1, LatLng l2,
       {List<LatLng> waypoints}) async {
     if (waypoints == null) {
@@ -30,19 +24,29 @@ class GoogleMapsServices {
           "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&key=$apiKey";
       http.Response response = await http.get(url);
       Map values = jsonDecode(response.body);
+      var routes = values["routes"][0];
+      var timeinseconds =
+          routes['legs'][0]['duration_in_traffic']['value'].toString();
+      var timeinseconds2 = routes['legs'][0]['duration']['value'].toString();
+      var timeinsecondsint =
+          ((int.parse(timeinseconds) + int.parse(timeinseconds2)) / 60).round();
+      log(timeinsecondsint.toString());
+      mins = timeinsecondsint.toString();
       return values["routes"][0]["overview_polyline"]["points"];
     } else {
-      var points = await _getwaypoints(waypoints);
+      var points = await getwaypoints(waypoints);
       String url =
           "https://maps.googleapis.com/maps/api/directions/json?origin=${l1.latitude},${l1.longitude}&destination=${l2.latitude},${l2.longitude}&waypoints=$points&travel_mode=transit&departure_time=now&key=$apiKey";
       http.Response response = await http.get(url);
       Map values = jsonDecode(response.body);
-      var routes = values["routes"][0];
-      // var legs = routes[0];
+      var routes = values["routes"];
+      // log("$routes");
+
+      // log("$legs");
       // log(values.toString());
       ways = waypoints;
       ways.add(LatLng(l1.latitude, l1.longitude));
-      var totaltime = 0;
+      // var totaltime = 0;
 //      for(int i = 0; i <ways.length; i++){
 //        var time = routes['legs'][i]['duration']['value'].toString();
 //        totaltime += int.parse(time);
@@ -57,8 +61,21 @@ class GoogleMapsServices {
       //     ((int.parse(timeinseconds) + int.parse(timeinseconds2)) / 60).round();
       // log(timeinsecondsint.toString());
       // mins = timeinsecondsint.toString();
+      // log(mins);
       return values["routes"][0]["overview_polyline"]["points"];
     }
+  }
+
+  Future<String> getDuration(LatLng l1, List<LatLng> l2) async {
+    var destinations = await getwaypoints(l2);
+    String url =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?origins=${l1.latitude},${l1.longitude}&destinations=$destinations&mode=trasit&departure_time=now&key=$apiKey";
+    http.Response response = await http.get(url);
+    Map values = jsonDecode(response.body);
+    var tr = values.toString();
+    log("$tr");
+    var duration = values["rows"][0]["elements"][0]["duration"];
+    return duration.toString();
   }
 
   void createRoute(String encondedPoly) {
@@ -87,7 +104,7 @@ class GoogleMapsServices {
     }
   }
 
-  Future<String> _getwaypoints(List<LatLng> way) async {
+  Future<String> getwaypoints(List<LatLng> way) async {
     String waypointcoords = '';
     // Future<String> finalwaypoints;
     if (way == null) {
@@ -102,8 +119,26 @@ class GoogleMapsServices {
           waypointcoords += '%7C$lat%2C$lon ';
         }
       }
-      // finalwaypoints.toString();
-      // finalwaypoints = waypointcoords as Future<String>;
+      waypointcoords.trim();
+
+      return waypointcoords;
+    }
+  }
+
+  Future<String> waypoints(List<LatLng> way) async {
+    String waypointcoords = '';
+    if (way == null) {
+      return null;
+    } else {
+      for (int i = 0; i <= (way.length); i++) {
+        var lat = way[i].latitude.toString();
+        var lon = way[i].longitude.toString();
+        if (i == 0) {
+          waypointcoords += '$lat%2C$lon';
+        } else {
+          waypointcoords += '%7C$lat%2C$lon ';
+        }
+      }
       waypointcoords.trim();
 
       return waypointcoords;

@@ -1,0 +1,46 @@
+  // getmarkers() async {
+  //   List clients = [];
+  //   FirebaseFirestore.instance
+  //       .collection('city')
+  //       .doc('city_1')
+  //       .collection('markers')
+  //       .get()
+  //       .then((docs) {
+  //     if (docs.docs.isNotEmpty) {
+  //       var num = docs.docs.length;
+  //       log("$num");
+  //       _markers.clear();
+  //       for (int i = 0; i < docs.docs.length; ++i) {
+  //         clients.add(docs.docs[i].data());
+  //         initMarker(docs.docs[i].data());
+  //       }
+  //     }
+  //   });
+  // }
+
+  // initMarker(client) {
+  //   // _markers.then(val){
+  //   print("$client");
+  //   var station = client['station_name'];
+
+  //   _markers.add(Marker(
+  //       position:
+  //           LatLng(client['location'].latitude, client['location'].longitude),
+  //       draggable: false,
+  //       infoWindow: InfoWindow(title: client['station_name']),
+  //       markerId: MarkerId('$station')));
+  //   // };
+  // }
+
+
+    void _createMarkers() async {
+    for (int i = 0; i < (way.length - 1); i++) {
+      markers.add(Marker(
+        markerId: MarkerId('${stations[i]}'),
+        position: new LatLng(way[i].latitude, way[i].longitude),
+        infoWindow: InfoWindow(
+          onTap: () => "${stations[i]}",
+        ),
+      ));
+    }
+  }

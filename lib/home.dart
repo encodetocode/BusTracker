@@ -1,3 +1,6 @@
+import 'package:busmap/cities/hamitkoy.dart';
+import 'package:busmap/cities/lefkosa.dart';
+import 'package:busmap/cities/yenikent.dart';
 import 'package:busmap/tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +92,7 @@ class MyHomePageState extends State<MyHomePage> {
       title: 'Backdrop Demo',
       home: BackdropScaffold(
         appBar: BackdropAppBar(
-          title: Text("Navigation Example"),
+          title: Text("Map"),
           actions: <Widget>[
             // BackdropToggleButton(
             //   icon: AnimatedIcons.list_view,

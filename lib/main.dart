@@ -9,7 +9,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
 import 'driver_page.dart';
-import 'mainmenu.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +38,8 @@ class MyApp extends StatelessWidget {
             routes: {
               "/": (context) => MapSample(),
               '/homepage': (context) => MyHomePage(),
+              '/driverlogin': (context) => Driver_LogIn(),
+              '/driverpage': (context) => DriverPage(),
             }));
   }
 }
@@ -80,8 +81,8 @@ class MapSample extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Driver_LogIn()));
-                    // context.read().DriverLogin();
+                            builder: (context) => Driver_LogIn(),
+                            fullscreenDialog: true));
                   },
                   child: Text(
                     "Driver",
