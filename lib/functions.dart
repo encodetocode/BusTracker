@@ -42,14 +42,21 @@ class GoogleMapsServices {
       // log(values.toString());
       ways = waypoints;
       ways.add(LatLng(l1.latitude, l1.longitude));
-      log(routes['legs'].toString());
-      var timeinseconds =
-          routes['legs'][0]['duration_in_traffic']['value'].toString();
-      var timeinseconds2 = routes['legs'][0]['duration']['value'].toString();
-      var timeinsecondsint =
-          ((int.parse(timeinseconds) + int.parse(timeinseconds2)) / 60).round();
-      log(timeinsecondsint.toString());
-      mins = timeinsecondsint.toString();
+      var totaltime = 0;
+//      for(int i = 0; i <ways.length; i++){
+//        var time = routes['legs'][i]['duration']['value'].toString();
+//        totaltime += int.parse(time);
+//
+//      }
+//      totaltime = (totaltime / 60).round();
+//       log(totaltime.toString());
+      // var timeinseconds =
+      //     routes['legs'][0]['duration_in_traffic']['value'].toString();
+      // var timeinseconds2 = routes['legs'][0]['duration']['value'].toString();
+      // var timeinsecondsint =
+      //     ((int.parse(timeinseconds) + int.parse(timeinseconds2)) / 60).round();
+      // log(timeinsecondsint.toString());
+      // mins = timeinsecondsint.toString();
       return values["routes"][0]["overview_polyline"]["points"];
     }
   }
@@ -90,9 +97,9 @@ class GoogleMapsServices {
         var lat = way[i].latitude.toString();
         var lon = way[i].longitude.toString();
         if (i == 0) {
-          waypointcoords += 'via:$lat%2C$lon';
+          waypointcoords += '$lat%2C$lon';
         } else {
-          waypointcoords += '%7Cvia:$lat%2C$lon ';
+          waypointcoords += '%7C$lat%2C$lon ';
         }
       }
       // finalwaypoints.toString();

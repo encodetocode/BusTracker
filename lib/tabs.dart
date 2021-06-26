@@ -3,7 +3,9 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 // import 'dart:html';
+import 'package:busmap/display_tracker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_map_polyline/google_map_polyline.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +27,8 @@ class GonyeliState extends State<Gonyeli> {
   Set<Polyline> _polylines = HashSet<Polyline>();
   Set<Marker> _markers = HashSet<Marker>();
   Set<Marker> markers = HashSet<Marker>();
+  final currentdriverlocation = Position();
+  DisplayOnmap display = DisplayOnmap();
 
   // List<LatLng> polylineLatLongs = List<LatLng>();
   GoogleMapPolyline googleMapPolyline =
@@ -124,6 +128,7 @@ class GonyeliState extends State<Gonyeli> {
       if (docs.docs.isNotEmpty) {
         var num = docs.docs.length;
         log("$num");
+        _markers.clear();
         for (int i = 0; i < docs.docs.length; ++i) {
           clients.add(docs.docs[i].data());
           initMarker(docs.docs[i].data());
@@ -136,6 +141,7 @@ class GonyeliState extends State<Gonyeli> {
     // _markers.then(val){
     print("$client");
     var station = client['station_name'];
+
     _markers.add(Marker(
         position:
             LatLng(client['location'].latitude, client['location'].longitude),
@@ -154,7 +160,8 @@ class GonyeliState extends State<Gonyeli> {
   void initState() {
     super.initState();
     _getWayPoints();
-    getmarkers();
+    // getmarkers();
+    display.retrivemarkers();
   }
 
   // void showPlacePicker() async {
