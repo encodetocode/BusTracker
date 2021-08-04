@@ -4,7 +4,7 @@ import 'package:busmap/functions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
-const apiKey = "AIzaSyAB85B9V9XjstZ9_BT_GF70Jb6AitZvseM";
+const apiKey = "API Here";
 GoogleMapsServices mapservice = GoogleMapsServices();
 
 class DistanceMatrix {

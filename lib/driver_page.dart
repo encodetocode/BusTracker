@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:busmap/authentication_services.dart';
 
-import 'package:busmap/track.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'tracker.dart';
 

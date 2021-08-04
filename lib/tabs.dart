@@ -28,16 +28,12 @@ class Gonyeli extends StatefulWidget {
 
 class GonyeliState extends State<Gonyeli> {
   GoogleMapController _controller;
-  final api = 'AIzaSyAB85B9V9XjstZ9_BT_GF70Jb6AitZvseM';
+  final api = 'API HERE';
   Set<Polyline> _polylines = HashSet<Polyline>();
   Set<Marker> _markers = HashSet<Marker>();
   Set<Marker> markers = HashSet<Marker>();
   final track = Tracker();
   final currentdriverlocation = Position();
-
-  // List<LatLng> polylineLatLongs = List<LatLng>();
-  GoogleMapPolyline googleMapPolyline =
-      new GoogleMapPolyline(apiKey: "AIzaSyAB85B9V9XjstZ9_BT_GF70Jb6AitZvseM");
 
   GoogleMapsServices _googleMapsServices = GoogleMapsServices();
   List<LatLng> way = [
